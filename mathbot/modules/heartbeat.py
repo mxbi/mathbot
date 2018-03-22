@@ -22,11 +22,11 @@ class Heartbeat(core.module.Module):
 				for shard in range(self.shard_count)
 			])
 			tick += 1
-			if tick % 5 == 0:
-				await self.client.change_presence(
-					game=discord.Game(name='bit.ly/mathbot'),
-					status=discord.Status.idle if current_time - slowest >= 10 else discord.Status.online
-				)
+#			if tick % 5 == 0:
+#				await self.client.change_presence(
+#					game=discord.Game(name='bit.ly/mathbot'),
+#					status=discord.Status.idle if current_time - slowest >= 10 else discord.Status.online
+#				)
 			await asyncio.sleep(1)
 		# Specify that the current shard is no longer running. Helps the other shards update sooner.
 		await core.keystore.set('heartbeat', str(self.shard_id), 1)

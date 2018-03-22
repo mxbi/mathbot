@@ -46,26 +46,19 @@ Maybe your query was malformed?
 
 ERROR_MESSAGE_TIMEOUT = """Wolfram|Alpha query timed out.
 Maybe you should try again?
-
-If this error keeps recurring, you should report it to DXsmiley on the \
-official MathBot server: https://discord.gg/JbJbRZS
 """
 
 ERROR_MESSAGE_ACCOUNT_BLOCKED = """MathBot has exceeded the total number of \
 Wolfram|Alpha queries it is allowed to make in one month.
-
-You should report this error to DXsmiley on the official MathBot \
-server: https://discord.gg/JbJbRZS
+Mikel is the guy to shout at.
 """
 
 FOOTER_LINK = """\
-Data sourced from Wolfram|Alpha: <http://www.wolframalpha.com/input/?{query}>
-Do more with Wolfram|Alpha Pro: <http://www.wolframalpha.com/pro/>
+Link: <http://www.wolframalpha.com/input/?{query}>
 """
 
 IGNORE_MESSAGE_SERVER = """\
-The bot is already processing a Wolfram|Alpha query for this server.
-Try again in a moment.
+The bot is already processing a Wolfram|Alpha query for this server, try again in a moment.
 """
 
 IGNORE_MESSAGE_DM = """\
@@ -90,11 +83,11 @@ Alternatively, you can make the query by messaging this bot directly.
 Questions and requests should be directed to <@133804143721578505> on the official MathBot server: https://discord.gg/JbJbRZS
 '''
 
-NO_API_ERROR = '''
+NO_API_ERROR = """
 No key was supplied for the Wolfram|Alpha API.
 
 If you're trying to set the bot up for development, see README.md for information on how to do this.
-'''
+"""
 
 RERUN_EMOJI = '🔄'
 EXPAND_EMOJI = '\U000025B6' # ▶️
@@ -325,7 +318,7 @@ class WolframModule(core.module.Module):
 		url = urllib.parse.urlencode({'i': query})
 		result.append(FOOTER_LINK.format(query=url))
 		if not small:
-			result.append('🐺 **Try out the new `=pup` command!** It\'s much more concise.\n')
+			result.append('🐺 **Use the `=pup` command for more concise Wolfram|Alpha results**\n')
 		return ''.join(result)
 
 	@staticmethod
