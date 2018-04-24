@@ -121,7 +121,7 @@ class Manager:
 		parts = cmd_string.replace('\n', ' ').split(' ')
 		for num_parts in range(len(parts), 0, -1):
 			joined = ' '.join(parts[:num_parts])
-			command = self.commands.get(joined)
+			command = self.commands.get(joined.lower())
 			if command is not None:
 				arguments = ' '.join(parts[num_parts:])
 				return command, arguments
@@ -320,6 +320,12 @@ class Manager:
 		result = await self.client.send_message(destination, *args, **kwargs)
 		await core.blame.set_blame(result.id, blame)
 		return result
+
+	async def send_typing(self, *args, **kwargs):
+		try:
+			await self.client.send_typing(*args, **kwargs)
+		except discord.errors.HTTPException:
+			pass # Discord someties throws 500's here. Ignore them, because we can live without it.
 
 
 def create_client(manager, shard_id, shard_count):
