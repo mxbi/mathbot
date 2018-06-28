@@ -7,10 +7,11 @@ TIER_EXPONENTIAL = 3
 TIER_SPECIAL = 4
 
 PATRONS = {}
-loaded = False
+LOADED = False
 
 def load():
 	global PATRONS
+	global LOADED
 	for user, rank in core.parameters.get('patrons').items():
 		numeric = -1
 		if rank.startswith('none'):
@@ -26,14 +27,15 @@ def load():
 		if numeric == -1:
 			raise ValueError('"{}" is an invalid patreon rank'.format(rank))
 		PATRONS[user] = numeric
-	global loaded
-	loaded = True
+	LOADED = True
 
 def tier(uid):
-	if not loaded:
+	if not isinstance(uid, str):
+		raise TypeError('User IDs must be of type str')
+	if not LOADED:
 		load()
 	return PATRONS.get(uid, TIER_NONE)
 
 def reset():
-	global loaded
-	loaded = False
+	global LOADED
+	LOADED = False

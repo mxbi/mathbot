@@ -183,6 +183,8 @@ class Manager:
 				await self.handle_redirect(message, result.destination, redirect_count + 1)
 			elif isinstance(result, str):
 				await self.send_message(message, result)
+			elif isinstance(result, discord.Embed):
+				await self.send_message(message, embed=result)
 		else:
 			if redirect_count > 0:
 				raise RedirectionFailed
@@ -343,7 +345,7 @@ def create_client(manager, shard_id, shard_count):
 	async def on_message(message):
 		# print('Received message', message.id)
 		# print(message.content)
-		if client._core_ready and manager.master_filter(message.channel) and manager.running:
+		if client._core_ready and manager.master_filter(message) and manager.running:
 			# print('Handling message')
 			await manager.handle_message(message)
 		# else:
@@ -351,12 +353,12 @@ def create_client(manager, shard_id, shard_count):
 
 	@client.event
 	async def on_message_edit(before, after):
-		if client._core_ready and manager.master_filter(before.channel) and manager.running:
+		if client._core_ready and manager.master_filter(before) and manager.running:
 			await manager.handle_edit(before, after)
 
 	@client.event
 	async def on_reaction_add(reaction, user):
-		if client._core_ready and manager.master_filter(reaction.message.channel) and manager.running:
+		if client._core_ready and manager.master_filter(reaction.message) and manager.running:
 			# print(shard_id, 'Reaction add!', reaction.message.id, reaction.emoji)
 			await manager.handle_reaction_add(reaction, user)
 

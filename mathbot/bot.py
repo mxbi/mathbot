@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
+import warnings
+warnings.simplefilter('default')
+
 import sys
 import os
 import asyncio
@@ -15,7 +18,8 @@ import json
 import typing
 
 
-# logging.basicConfig(level = logging.WARNING)
+logging.basicConfig(level = logging.INFO)
+sys.setrecursionlimit(2500)
 
 
 DONE_SETUP = False
@@ -24,32 +28,6 @@ TOKEN = None
 SHARDS_TOTAL = 0
 SHARDS_MINE = typing.List[int]
 BOT_RUNNING = True
-
-
-class SecondSignal(Exception):
-	def __str__(self):
-		return 'A second signal was received.'
-
-
-def handle_sigterm(signum, frame):
-	global BOT_RUNNING
-	if not BOT_RUNNING:
-		raise SecondSignal
-	BOT_RUNNING = False
-	print('\nCaught SIGTERM\n')
-
-
-def handle_sigint(signum, frame):
-	global BOT_RUNNING
-	if not BOT_RUNNING:
-		raise SecondSignal
-	BOT_RUNNING = False
-	print('\nCaught SIGINT\n')
-
-
-signal.signal(signal.SIGTERM, handle_sigterm)
-signal.signal(signal.SIGINT, handle_sigint)
-
 
 
 def do_setup():
@@ -101,9 +79,11 @@ def do_setup():
 	print('My shards:', ' '.join(map(str, SHARDS_MINE)))
 
 
-# Used to ensure the beta bot only replies in the channel that it is supposed to
-def event_filter(channel):
-	return (RELEASE != 'beta') or ((not channel.is_private) and channel.id == '325908974648164352')
+# Filters out messages from other bots.
+def event_filter(message):
+	if RELEASE != 'development' and message.author.bot:
+		return False
+	return True
 
 
 def create_shard_manager(shard_id, shard_count):
@@ -144,12 +124,12 @@ def create_shard_manager(shard_id, shard_count):
 		modules.blame.BlameModule(),
 		modules.about.AboutModule(),
 		modules.latex.LatexModule(),
-		modules.calcmod.CalculatorModule(RELEASE in ['development', 'beta']),
+		modules.calcmod.CalculatorModule(),
+		modules.dice.DiceModule(),
 		modules.purge.PurgeModule(),
 		# Will only trigger stats if supplied with tokens
 		modules.analytics.AnalyticsModule(),
 		modules.reporter.ReporterModule(),
-		modules.dice.DiceModule(),
 		modules.heartbeat.Heartbeat()
 	)
 

@@ -23,7 +23,8 @@ The bot is currently developed for python `3.6.4`.
 git clone https://github.com/DXsmiley/mathbot.git
 cd mathbot
 cp mathbot/parameters_default.json mathbot/parameters.json
-pip install -r requirements.txt
+pipenv --python 3.6
+pipenv install --skip-lock
 ```
 
 Then open parameters.json and change `tokens` to the token of the bot used for development. Optionally change the other parameters.
@@ -38,7 +39,8 @@ Then navigate into the `mathbot` directory and run the bot with `python bot.py p
 git clone https://github.com/DXsmiley/mathbot.git
 cd mathbot
 cp mathbot/parameters_default.json mathbot/parameters.json
-pip install -r requirements.txt
+pipenv --python 3.6
+pipenv install --dev --skip-lock
 ```
 
 Then open parameters.json and change `tokens` to the token of the bot. Change `release` to `development`. Optionally change the other parameters.
@@ -101,5 +103,8 @@ There are some additional tests that require a human to verify the bot's output.
 - *error-reporting*
 	- *channel*: ID of channel to send error reports to. If not specified, reports will not be sent.
 - *shards*
-	- "total": The total number of shards that the bot is running on.
-	- "mine": A list of integers (starting at `0`) specifying which shards should be run in this process.
+	- *total*: The total number of shards that the bot is running on.
+	- *mine*: A list of integers (starting at `0`) specifying which shards should be run in this process.
+- *calculator*
+	- *persistent*: `true` or `false`. Enable to remember calculator history between runs. Off by default.
+	- *libraries*: `true` or `false`. Enables the `=libs` set of commands. Off by default.
